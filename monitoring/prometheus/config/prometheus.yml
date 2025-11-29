@@ -28,6 +28,7 @@ scrape_configs:
           - 'transfer-service:8080'
           - 'card-service:8080'
           - 'ledger-service:8080'
+          - 'user-service:8080'
           - 'api-gateway-1:8080'
           - 'api-gateway-2:8080'
           - 'auth-server:8080'
