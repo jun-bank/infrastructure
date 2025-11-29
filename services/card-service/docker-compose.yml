@@ -1,0 +1,24 @@
+# ========================================
+# Card Service - Docker Compose
+# ========================================
+services:
+  card-service:
+    image: jun-bank/card-service:latest
+    container_name: card-service
+    env_file:
+      - ./.env
+    ports:
+      - "8084:8084"
+    networks:
+      - jun-bank-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+networks:
+  jun-bank-network:
+    external: true
