@@ -1,0 +1,58 @@
+services:
+  prometheus:
+    image: prom/prometheus:v2.54.0
+    container_name: prometheus
+    hostname: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time=15d'
+    volumes:
+      - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/config/alert-rules.yml:/etc/prometheus/alert-rules.yml:ro
+      - ../data/prometheus:/prometheus
+    networks:
+      - jun-bank-network
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: grafana
+    hostname: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana/config/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./grafana/config/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ../data/grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - jun-bank-network
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager
+    hostname: alertmanager
+    ports:
+      - "9093:9093"
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    volumes:
+      - ./alertmanager/config/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ../data/alertmanager:/alertmanager
+    networks:
+      - jun-bank-network
+
+networks:
+  jun-bank-network:
+    name: jun-bank-network
+    driver: bridge
