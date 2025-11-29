@@ -1,17 +1,20 @@
+# ========================================
+# Config Server - Docker Compose
+# ========================================
 services:
   config-server:
-    image: ghcr.io/jun-bank/config-server:latest
+    image: jun-bank/config-server:latest
     container_name: config-server
     hostname: config-server
+    env_file:
+      - ./.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker,native
+      - CONFIG_REPO_PATH=/config-repo
+    volumes:
+      - ../config-repo/configs:/config-repo:ro
     ports:
       - "8888:8888"
-    environment:
-      SERVER_PORT: 8888
-      EUREKA_INSTANCE_HOSTNAME: config-server
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server-1:8761/eureka/,http://eureka-server-2:8762/eureka/
-      CONFIG_REPO_URI: https://github.com/jun-bank/config-repo
-      CONFIG_REPO_BRANCH: main
-      ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
     networks:
       - jun-bank-network
     healthcheck:
@@ -19,8 +22,9 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 60s
+    restart: unless-stopped
 
 networks:
   jun-bank-network:
-    name: jun-bank-network
-    driver: bridge
+    external: true
