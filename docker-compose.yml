@@ -139,6 +139,93 @@ services:
       gateway-server-2:
         condition: service_healthy
 
+  # ========================================
+  # 9단계: Business Services
+  # ========================================
+#  user-service:
+#    extends:
+#      file: ./services/user-service/docker-compose.yml
+#      service: user-service
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      kafka-1:
+#        condition: service_healthy
+#
+#  auth-server:
+#    extends:
+#      file: ./services/auth-server/docker-compose.yml
+#      service: auth-server
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      kafka-1:
+#        condition: service_healthy
+#
+#  account-service:
+#    extends:
+#      file: ./services/account-service/docker-compose.yml
+#      service: account-service
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      kafka-1:
+#        condition: service_healthy
+#
+#  transaction-service:
+#    extends:
+#      file: ./services/transaction-service/docker-compose.yml
+#      service: transaction-service
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      kafka-1:
+#        condition: service_healthy
+#
+#  transfer-service:
+#    extends:
+#      file: ./services/transfer-service/docker-compose.yml
+#      service: transfer-service
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      kafka-1:
+#        condition: service_healthy
+#
+#  card-service:
+#    extends:
+#      file: ./services/card-service/docker-compose.yml
+#      service: card-service
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      kafka-1:
+#        condition: service_healthy
+#
+#  ledger-service:
+#    extends:
+#      file: ./services/ledger-service/docker-compose.yml
+#      service: ledger-service
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      kafka-1:
+#        condition: service_healthy
+
 networks:
   jun-bank-network:
     name: jun-bank-network
