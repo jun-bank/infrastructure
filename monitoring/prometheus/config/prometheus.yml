@@ -1,0 +1,49 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+rule_files:
+  - /etc/prometheus/alert-rules.yml
+
+scrape_configs:
+  # Prometheus 자체 모니터링
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Spring Boot Actuator 메트릭
+  - job_name: 'spring-boot-services'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets:
+          - 'account-service:8080'
+          - 'transaction-service:8080'
+          - 'transfer-service:8080'
+          - 'card-service:8080'
+          - 'ledger-service:8080'
+          - 'api-gateway-1:8080'
+          - 'api-gateway-2:8080'
+          - 'auth-server:8080'
+          - 'config-server:8080'
+          - 'eureka-server-1:8761'
+          - 'eureka-server-2:8761'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+):.*'
+        replacement: '${1}'
+
+  # Kafka 메트릭
+  - job_name: 'kafka'
+    static_configs:
+      - targets:
+          - 'kafka-1:9999'
+          - 'kafka-2:9999'
+          - 'kafka-3:9999'
