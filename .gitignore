@@ -1,0 +1,19 @@
+# Data volumes
+data/
+
+# Logs
+logs/
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.env.local
+secrets/
