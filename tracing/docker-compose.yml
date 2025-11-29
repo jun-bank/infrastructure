@@ -1,0 +1,17 @@
+services:
+  zipkin:
+    image: openzipkin/zipkin:3.4
+    container_name: zipkin
+    hostname: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - ES_HOSTS=http://elasticsearch:9200
+    networks:
+      - jun-bank-network
+
+networks:
+  jun-bank-network:
+    name: jun-bank-network
+    driver: bridge
