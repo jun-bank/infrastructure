@@ -1,0 +1,38 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname', 'severity']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'default-receiver'
+
+  routes:
+    - match:
+        severity: critical
+      receiver: 'critical-receiver'
+    - match:
+        severity: warning
+      receiver: 'warning-receiver'
+
+receivers:
+  - name: 'default-receiver'
+    # 기본 수신자 (설정 필요시 webhook, email 등 추가)
+
+  - name: 'critical-receiver'
+    # Slack, PagerDuty 등 연동 가능
+    # slack_configs:
+    #   - api_url: 'https://hooks.slack.com/services/xxx'
+    #     channel: '#alerts-critical'
+
+  - name: 'warning-receiver'
+    # webhook_configs:
+    #   - url: 'http://alert-handler:8080/webhook'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
