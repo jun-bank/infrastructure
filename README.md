@@ -8,6 +8,7 @@ Jun Bank MSA 인프라 구성을 위한 Docker Compose 파일 모음입니다.
 
 | 디렉토리 | 설명 | 포트 |
 |----------|------|------|
+| `postgres/` | PostgreSQL + pgvector | 5432 |
 | `kafka/` | Kafka 클러스터 (KRaft 3대) | 9092, 9093, 9094 |
 | `elk/` | Elasticsearch, Logstash, Kibana | 9200, 5044, 5601 |
 | `monitoring/` | Prometheus, Grafana, Alertmanager | 9090, 3000, 9093 |
@@ -27,6 +28,9 @@ docker-compose up -d
 ### 개별 실행
 
 ```bash
+# PostgreSQL
+docker-compose -f postgres/docker-compose.yml up -d
+
 # Kafka
 docker-compose -f kafka/docker-compose.yml up -d
 
@@ -61,6 +65,13 @@ infrastructure/
 ├── docker-compose.yml              # 전체 통합 실행
 ├── .gitignore
 ├── README.md
+│
+├── postgres/
+│   ├── docker-compose.yml          # PostgreSQL + pgvector
+│   ├── config/
+│   │   └── postgresql.conf         # 성능 튜닝 설정
+│   └── init/
+│       └── 01-init-databases.sh    # DB 초기화 스크립트
 │
 ├── kafka/
 │   └── docker-compose.yml          # KRaft 3대 클러스터 + Kafka UI
@@ -156,9 +167,22 @@ infrastructure/
 
 | 서비스 | URL | 계정 |
 |--------|-----|------|
+| PostgreSQL | localhost:5432 | postgres / postgres |
 | Kafka UI | http://localhost:8989 | - |
 | Kibana | http://localhost:5601 | - |
 | Prometheus | http://localhost:9090 | - |
 | Grafana | http://localhost:3000 | admin / admin |
 | Alertmanager | http://localhost:9093 | - |
 | Zipkin | http://localhost:9411 | - |
+
+## 데이터베이스 목록
+
+| DB | 사용자 | 서비스 |
+|----|--------|--------|
+| account_db | account | Account Service |
+| transaction_db | transaction | Transaction Service |
+| transfer_db | transfer | Transfer Service |
+| card_db | card | Card Service |
+| ledger_db | ledger | Ledger Service |
+| user_db | user | User Service |
+| auth_db | auth | Auth Server |
